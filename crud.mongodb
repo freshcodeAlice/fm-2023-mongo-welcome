@@ -1,1 +1,124 @@
+db.students.find(); //// SELECT * FROM students;
+
+db.students.find({
+    firstName: 'John'
+}); /////SELECT * FROM students WHERE firstName = 'John'
+
+
+////
+
+db.inventory.insertMany([
+    { "item": "journal", "qty": 25, "size": { "h": 14, "w": 21, "uom": "cm" }, "status": "A" },
+    { "item": "notebook", "qty": 50, "size": { "h": 8.5, "w": 11, "uom": "in" }, "status": "A" },
+    { "item": "paper", "qty": 100, "size": { "h": 8.5, "w": 11, "uom": "in" }, "status": "D" },
+    { "item": "planner", "qty": 75, "size": { "h": 22.85, "w": 30, "uom": "cm" }, "status": "D" },
+    { "item": "postcard", "qty": 45, "size": { "h": 10, "w": 15.25, "uom": "cm" }, "status": "A" }
+]);
+
+//// SELECT * FROM inventory WHERE status = 'A'
+
+
+db.inventory.find({
+    status: 'A'
+});
+
+
+//// SELECT * FROM inventory WHERE status IN ('A', 'D')
+
+
+db.inventory.find({
+    status: {
+        $in: ['A', 'D']
+    }
+});
+
+
+
+/// Знайти  всі документи, в яких "qty" < 50 
+
+
+db.inventory.find({
+    qty: {
+        $lt: 50
+    }
+});
+
+//// Знайти всі документи, в яких статус - А, або qty < 50
+
+
+//// SELECT * FROM inventory WHERE (status = 'A') OR (qty < 50)
+
+
+db.inventory.find({
+   $or: [
+    {
+        status: 'A'
+    },
+    {
+        qty: {
+            $lt: 50
+        }
+    }
+   ]
+});
+
+
+
+///// nested documents
+
+db.inventory.find();
+
+/// Запит на вкладений об'єкт
+
+/// всі документи, в яких size.h > 10
+
+db.inventory.find({
+    "size.h": {
+        $gt: 10
+    }
+});
+
+
+/// w < 15
+
+
+db.inventory.find({
+    "size.w": {
+        $lt: 15
+    }
+});
+
+
+
+
 db.students.find();
+
+///  знайти всіх чоловічої статі >=20 років
+
+db.students.find({
+    $and: [{
+        age: {
+            $gte: 20
+        }
+    }, {
+        gender: 'male'
+    }]
+});
+
+db.students.find({
+        age: {
+            $gte: 20
+        },
+        gender: 'male'
+});
+
+
+/// Знайдіть всіх чоловіків, яким 20 або 30 років.
+
+
+ db.students.find({
+        age: {
+            $in: [20, 30]
+        },
+        gender: 'male'
+});
