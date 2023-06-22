@@ -122,3 +122,34 @@ db.students.find({
         },
         gender: 'male'
 });
+
+
+db.students.find();
+
+db.students.insertOne({});
+
+
+/// Витягти тільки тих юзерів, в яких є ім'я
+// $exists
+
+db.students.find({
+    firstName: {
+        $exists: true
+    }
+});
+
+
+/// Отримати всіх юзерів, в яких є ім'я, прізвище і вік
+
+
+db.students.find({
+    firstName: {
+        $exists: true
+    },
+    lastName: {
+         $exists: true
+    },
+    age: {
+         $exists: true
+    }
+});
