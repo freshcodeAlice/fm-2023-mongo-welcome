@@ -1,0 +1,226 @@
+/*
+Schema Validation
+
+- Описує перелік полів документа, на які ми чекаємо. Все інше (повз) очікуваного ніяк не буде зупинятися
+- Описує тип даних для очікуваних полів. Всі інші (неперевірені) типи будуть пропускатися
+- Описує обов'язкові поля (якщо вони обов'язкові), в такому випадку документи БЕЗ цих полів пропускатись не будуть. Але якщо поле необов'язкове, то без нього документ пропустять
+
+*/
+
+
+db.createCollection("users", {
+    validator: {
+        $jsonSchema: {
+            required: ['firstName', 'lastName', 'email', 'password'],
+            properties: {
+                firstName: {
+                    bsonType: "string",
+                    description: "must be a string and is required"
+                },
+                lastName: {
+                    bsonType: "string",
+                    description: "must be a string and is required"
+                },
+                email: {
+                    bsonType: "string",
+                    description: "must be a string and is required"
+                },
+                password: {
+                    bsonType: "string",
+                    description: "must be a string and is required"
+                },
+                birthday: {
+                    bsonType: "date",
+                    description: "must be a date"
+                },
+                gender: {
+                    bsonType: "string",
+                    description: "must be a string"
+                },
+                address: {
+                    bsonType: "object",
+                    required: ['city', 'street'],
+                    description: "must be an object",
+                    properties: {
+                        city: {
+                            bsonType: 'string',
+                            description: "must be a string and is required"
+                        },
+                        street: {
+                            bsonType: 'string',
+                            description: "must be a string and is required"
+                        },
+                        house: {
+                             bsonType: 'int',
+                            description: "must be a int"
+                        }
+                    }
+                },
+            } 
+        }
+    }
+});
+
+
+
+
+/*
+Users
+*- firstName - string
+*- lastName - string
+*- email - string
+*- password - string
+- address - object
+    - street,
+    - city,
+    - house
+- birthday - date
+- gender - string
+
+
+*/
+
+
+
+db.users.insertOne({
+    firstName: 'Test',
+    lastName: 'Tester',
+    email: 'test@sd.e',
+    password: '1324',
+    gender: 'male'
+});
+
+
+db.users.insertOne({
+    firstName: 4,
+    lastName: 'Tester',
+    email: 'test@sd.e',
+    password: '1324',
+    gender: 'male'
+});
+
+
+
+/*
+1. Описати колекцію товарів
+Товар
+*- name: string
+*- category: string
+*- price: double
+- discountPrice: double
+- description: string
+- manufacturer: object
+    - name
+    - city
+- color: ['string']
+
+2. Описати колекцію книг
+*- name: string
+* - author: object
+    *-name: string
+    *-lastName: string
+    - birthday: date
+- edition int
+- ISBN - string
+- coverType - string
+
+*/
+
+
+
+db.createCollection('products', {
+    validator: {
+        $jsonSchema: {
+            required: ['name', 'category', 'price'],
+            properties: {
+                name: {
+                    bsonType: 'string',
+                    description: "must be a string and is required"
+                },
+                category: {
+                    bsonType: 'string',
+                    description: "must be a string and is required"
+                },
+                price: {
+                    bsonType: 'double',
+                    description: "must be a double and is required"
+                },  
+                discountPrice: {
+                    bsonType: 'double',
+                    description: "must be a double"
+                }, 
+                description: {
+                    bsonType: 'string',
+                    description: "must be a string"
+                },  
+                manufacturer: {
+                    bsonType: 'object',
+                    properties: {
+                        name: {
+                            bsonType: 'string',
+                            description: "must be a string"
+                        },
+                        city: {
+                            bsonType: 'string',
+                            description: "must be a string"
+                        },
+                    }
+                },
+                color: {
+                    bsonType: "array",
+                    description: "must be an array"
+                }                                            
+            }
+        }
+    }
+})
+
+
+
+--2
+
+
+
+db.createCollection('books', {
+    validator: {
+        $jsonSchema: {
+            required: ['name', 'author'],
+            properties: {
+                name: {
+                    bsonType: 'string',
+                    description: "must be a string and is required"
+                },
+                  author: {
+                    bsonType: 'object',
+                    required: ['name', 'lastName'],
+                    properties: {
+                        name: {
+                            bsonType: 'string',
+                            description:  "must be a string and is required"
+                        },
+                         lastName: {
+                            bsonType: 'string',
+                            description:  "must be a string and is required"
+                        },
+                        birthday: {
+                             bsonType: 'date',
+                            description:  "must be a date"
+                        }
+                    }
+                },
+                edition: {
+                    bsonType: 'int',
+                    description: "must be a integer"                   
+                },
+                ISBN: {
+                    bsonType: 'string',
+                    description: "must be a string"
+                },
+                coverType: {
+                    bsonType: 'string',
+                    description: "must be a string"
+                }
+            }
+        }
+    }
+});
