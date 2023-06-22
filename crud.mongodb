@@ -153,3 +153,185 @@ db.students.find({
          $exists: true
     }
 });
+
+db.inventory.drop();
+
+
+db.inventory.insertMany( [
+   { item: "canvas", qty: 100, size: { h: 28, w: 35.5, uom: "cm" }, status: "A" },
+   { item: "journal", qty: 25, size: { h: 14, w: 21, uom: "cm" }, status: "A" },
+   { item: "mat", qty: 85, size: { h: 27.9, w: 35.5, uom: "cm" }, status: "A" },
+   { item: "mousepad", qty: 25, size: { h: 19, w: 22.85, uom: "cm" }, status: "P" },
+   { item: "notebook", qty: 50, size: { h: 8.5, w: 11, uom: "in" }, status: "P" },
+   { item: "paper", qty: 100, size: { h: 8.5, w: 11, uom: "in" }, status: "D" },
+   { item: "planner", qty: 75, size: { h: 22.85, w: 30, uom: "cm" }, status: "D" },
+   { item: "postcard", qty: 45, size: { h: 10, w: 15.25, uom: "cm" }, status: "A" },
+   { item: "sketchbook", qty: 80, size: { h: 14, w: 21, uom: "cm" }, status: "A" },
+   { item: "sketch pad", qty: 95, size: { h: 22.85, w: 30.5, uom: "cm" }, status: "A" }
+] );
+
+//// UPDATE
+
+/* UPDATE table SET key1 = value1 WHERE condition = true; */
+
+
+db.inventory.updateOne({
+    qty: 45
+}, {
+    $set: {
+        qty: 50
+    }
+});
+
+db.inventory.updateMany({
+    qty: 100
+}, {
+    $set: {
+        qty: 110
+    }
+});
+
+
+
+db.inventory.updateMany({
+    qty: 50
+}, {
+    $set: {
+        discount: true
+    }
+});
+
+db.inventory.find();
+
+
+/// У всіх студентів, в яких був вік, забрати його
+
+
+db.students.updateMany({
+   age: {
+    $exists: true
+   }
+}, {
+    $unset: {
+        age: ''
+    }
+});
+
+db.students.find();
+
+
+/*
+1. Оновити колекцію. Всі документи, в яких статус
+А -> 'done',
+D -> processing
+P -> error
+
+
+2. Всі документи, в яких 
+size: {
+    "uom": "in"
+} 
+поміняти на 
+size: {
+    "uom": "mm"
+} 
+*/
+
+
+db.inventory.updateMany({
+    status: 'A'
+}, {
+    $set: {
+        status: 'done'
+    }
+});
+
+db.inventory.updateMany({
+    status: 'D'
+}, {
+    $set: {
+        status: 'processing'
+    }
+});
+
+
+db.inventory.updateMany({
+    status: 'P'
+}, {
+    $set: {
+        status: 'error'
+    }
+});
+
+--2
+
+
+db.inventory.updateMany({
+    "size.uom": "in"
+}, {
+    $set: {
+      "size.uom": "mm"
+    }
+});
+
+
+
+/*
+ 1) Знайти всі inventory, в яких
+ або статус error
+ або (done, і при цьому qty >=50)
+
+2) Встановити size.w = 10 для всіх, в кого qty >= 50
+
+3) Видалити всіх студентів, в яких немає поля firstName
+*/
+
+
+---1
+
+db.inventory.find({
+    $or: [{
+        status: 'error'
+    }, {
+        $and: [
+            {
+                status: 'done'
+            }, {
+                qty: {
+                    $gte: 50
+                }
+            }
+        ]
+    }]
+});
+
+
+--2
+
+db.inventory.updateMany({
+    qty: {
+        $gte: 50
+    }
+}, {
+    $set: {
+        "size.w": 10
+    }
+});
+
+
+---3
+
+
+db.students.deleteMany({
+    firstName: {
+        $exists: false
+    }
+});
+
+
+db.students.deleteMany({});
+
+db.students.find();
+
+
+db.students.drop();
