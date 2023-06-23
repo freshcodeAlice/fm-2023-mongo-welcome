@@ -3,7 +3,7 @@ const movieRouter = require('./movieRouter');
 
 const apiRouter = express.Router();
 
-apiRouter.use('/movie', movieRouter);
+apiRouter.use('/movies', movieRouter);
 
 
 module.exports = apiRouter;

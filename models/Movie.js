@@ -19,20 +19,6 @@ const movieSchema = new Schema({
     rating: Number,
 })
 
+const Movie = mongoose.model('Movie', movieSchema); 
 
-
-/*
-
-Movie
-
-*+ name:string
-- genre: array
-+ director: string
-+ studio: string
-*- production: date
-- duration: int
-- actors: []
-- rating: double
-
-
-*/
+module.exports = Movie;
