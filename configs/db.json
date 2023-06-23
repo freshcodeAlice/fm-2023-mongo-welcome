@@ -1,0 +1,9 @@
+{
+    "development": {
+        "database" : "fm-2023-movie-db",
+        "port": 27017,
+        "host": "localhost"
+    },
+    "test": {},
+    "production": {}
+}
