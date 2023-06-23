@@ -5,7 +5,7 @@ const {Schema} = mongoose;
 const movieSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: [true, 'Name is required field for movie']
     },
     director: String,
     studio: String,
@@ -14,9 +14,20 @@ const movieSchema = new Schema({
         type: Date,
         required: true
     },
-    duration: Number,
+    duration:{
+        type: Number,
+        validate: {
+            validator: function (v) {
+                return v > 0
+            }
+        }
+    },
     actors: [String],
-    rating: Number,
+    rating: {
+        type: Number,
+        min: [0, 'Russian filmes banned'],
+        max: 10
+    },
 })
 
 const Movie = mongoose.model('Movie', movieSchema); 
