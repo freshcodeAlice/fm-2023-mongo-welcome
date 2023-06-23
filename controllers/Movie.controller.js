@@ -19,3 +19,17 @@ module.exports.getAll = async (req, res, next) => {
         next(error);
     }
 }
+
+
+
+module.exports.getOne = async (req, res, next) => {
+    try {
+        const {params: {id}} = req;
+        /// const idToFind = new ObjectId(id)
+        const movie = await Movie.findById(id);
+        console.log(movie);
+        res.status(200).send({data: movie})
+    }catch(error) {
+        next(error);
+    }
+}
