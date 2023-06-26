@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const db = require('../configs/db.json');
 const Movie = require('./Movie');
+const User = require('./User');
 
 const CONFIG = db[process.env.NODE_ENV || "development"]
 
@@ -12,5 +13,6 @@ mongoose.connect(`mongodb://${CONFIG.host}:${CONFIG.port}/${CONFIG.database}`)
 
 
 module.exports = {
-    Movie
+    Movie,
+    User
 }

@@ -99,3 +99,20 @@ module.exports.getSearchAll = async (req, res, next) => {
         next(error)
     }
 }
+
+
+
+module.exports.getUsersLikedThisFilm = async(req, res, next) => {
+    try {
+        const {params: {id}} = req;
+        const movie = await Movie.findById(id).populate({
+            path: 'fans',
+            model: 'User',
+            strictPopulate: false,
+            populate: { path: 'favouriteFilms' }
+        });
+        res.status(200).send({data: movie})
+    } catch(error) {
+        next(error)
+    }
+}

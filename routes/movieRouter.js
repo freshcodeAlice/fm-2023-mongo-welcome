@@ -10,6 +10,7 @@ movieRouter.put('/:id', MovieController.updateOne);
 movieRouter.delete('/:id', MovieController.deleteOne);
 movieRouter.get('/search/', MovieController.getSearchOne); /// ?name=Taxi Driver
 movieRouter.get('/search/all/', MovieController.getSearchAll); /// ?name=Taxi Driver
+movieRouter.get('/fans/:id', MovieController.getUsersLikedThisFilm);
 
 module.exports = movieRouter;
 

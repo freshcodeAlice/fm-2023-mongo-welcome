@@ -1,0 +1,10 @@
+POST http://localhost:3000/api/users/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "firstName": "Germany",
+    "lastName": "Grandger",
+    "email": "germy@hog.warts",
+    "gender": "female",
+    "favouriteFilms": ["649556198db08541fc841b04", "64955c9fc8ce3a6a494e02dc"]
+}
