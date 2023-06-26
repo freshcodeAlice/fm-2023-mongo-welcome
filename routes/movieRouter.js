@@ -12,3 +12,10 @@ movieRouter.get('/search/', MovieController.getSearchOne); /// ?name=Taxi Driver
 movieRouter.get('/search/all/', MovieController.getSearchAll); /// ?name=Taxi Driver
 
 module.exports = movieRouter;
+
+
+/*
+TODO: реалізувати юзерів, які можуть брати фільми напрокат
+
+
+*/

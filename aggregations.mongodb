@@ -1,0 +1,71 @@
+/*
+Агрегаційний конвейер - певні операції над даними, які організовані за принципом конвейера (чейнінга в js) - результат опрацювання попереднього етапу передається наступному
+
+Наприклад:
+для того, щоб порахувати суму значень по кожній групі документів, нам потрібно:
+1 етап - згрупувати
+2 етап - порахувати значення по кожній групі
+
+
+Один етап - одна операція
+
+*/
+
+db.createCollection('manufacturer', {
+    validator: {
+        $jsonSchema: {
+            bsonType: 'object',
+            required: ['name'],
+            properties: {
+                name: {
+                    bsonType: 'string',
+                },
+                address: {
+                    bsonType: 'object',
+                    required: ['country', 'city']
+                }
+            }
+        }
+    }
+});
+
+
+db.manufacturer.insertMany([{
+    name: 'Apple',
+    address: {
+        country: 'USA',
+        city: 'New-York'
+    }
+}, {
+    name: 'Sony',
+    address: {
+        country: 'China',
+        city: 'Pekin'
+    }
+}, {
+    name: 'Samsung'
+}]);
+
+
+db.createCollection('products', {
+    validator: {
+        $jsonSchema: {
+            bsonType: 'object',
+            required: ['name', 'price', 'amount'],
+            properties: {
+                name: {
+                    bsonType: 'string'
+                },
+                price: {
+                    bsonType: 'double'
+                },
+                amount: {
+                    bsonType: 'int'
+                },
+                expiredDate: {
+                    bsonType: 'date'
+                }
+            }
+        }
+    }
+});
