@@ -46,6 +46,7 @@ db.manufacturer.insertMany([{
     name: 'Samsung'
 }]);
 
+db.products.drop();
 
 db.createCollection('products', {
     validator: {
@@ -64,8 +65,109 @@ db.createCollection('products', {
                 },
                 expiredDate: {
                     bsonType: 'date'
+                },
+                manufacturerId: {
+                    bsonType: "objectId"
                 }
             }
         }
     }
 });
+
+
+db.products.insertMany([{
+    name: 'iPhone',
+    price: 200.50,
+    amount: 20,
+    expiredDate: new Date(),
+    manufacturerId: new ObjectId("64992dbf77f4bcc01d07ef18")
+}, {
+    name: 'S10',
+    price: 100.50,
+    amount: 20,
+    expiredDate: new Date(),
+    manufacturerId: new ObjectId("64992dbf77f4bcc01d07ef19")
+},{
+    name: '40S',
+    price: 3300.50,
+    amount: 20,
+    expiredDate: new Date(),
+    manufacturerId: new ObjectId("64992dbf77f4bcc01d07ef18")
+},{
+    name: 'iPad',
+    price: 1344.50,
+    amount: 20,
+    expiredDate: new Date(),
+    manufacturerId: new ObjectId("64992dbf77f4bcc01d07ef19")
+},{
+    name: 'A23',
+    price: 30.50,
+    amount: 20,
+    expiredDate: new Date(),
+    manufacturerId: new ObjectId("64992dbf77f4bcc01d07ef18")
+},{
+    name: 'M20',
+    price: 100.50,
+    amount: 20,
+    manufacturerId: new ObjectId("64992dbf77f4bcc01d07ef18")
+},{
+    name: 'P34',
+    price: 200.50,
+    amount: 20
+},{
+    name: 'Tel1',
+    price: 400.50,
+    amount: 20,
+    manufacturerId: new ObjectId("64992dbf77f4bcc01d07ef19")
+}]);
+
+
+db.products.find();
+
+
+db.products.insertOne({
+    name: 'Supertel',
+    price: 500.50,
+    amount: 20,
+    manufacturerId: new ObjectId("34f2e45ab89123d98ab89432")
+});
+
+/*
+.aggregate() завжди приймає масив об'єктів
+кожен об'єкт в цьому масиві представляє етап агрегації (тобто, операцію, яку ми робимо над даними)
+
+*/
+
+db.manufacturer.find();
+
+
+db.products.aggregate([{
+    $lookup: {
+        from: 'manufacturer',
+        localField: 'manufacturerId',
+        foreignField: '_id',
+        as: 'manuf'
+    }
+}]);
+
+// Products + manufacturer
+/*
+$lookup: {
+    from: колекція, яку ми джойнимо до початкової (на якій працює агрегація)
+    localField: назва поля в початковій колекції
+    foreignField: назва поля в зджойненій колекції
+    as: псевдонім для поля-результату
+}
+
+*/
+
+
+/*
+SELECT список_вибірки
+FROM таблиця1
+JOIN таблиця2
+ON (умова співставлення таблиць)
+
+таблиця1.поле = таблиця2.інше_поле
+
+*/
