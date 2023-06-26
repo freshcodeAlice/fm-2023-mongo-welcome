@@ -267,3 +267,195 @@ db.products.aggregate([{
 
 
 db.products.find().limit(5);
+
+
+
+/*
+Практика
+Створити нові колекції: 
+- Студенти
+*-- ім'я: string
+*-- прізвище: string
+*-- мейл: string
+*-- групу: string
+
+- Групи
+*-- назва групи:string
+-- куратор: object
+*--- ім'я: string
+*--- прізвище: string
+
+
+1. Створити колеції зі схемами
+2. Додати 10 або більше документів до колекції "Студентів" в різні групи
+3. Порахувати кількість студентів по кожній групі (за допомогою агрегацій)
+
+*/
+
+
+db.createCollection('groups', {
+    validator: {
+        $jsonSchema: {
+            bsonType: 'object',
+            required: ['name'],
+            properties: {
+                name: {
+                    bsonType: 'string'
+                },
+                curator: {
+                    bsonType: 'object',
+                    required: ['firstName', 'lastName'],
+                    properties: {
+                        firstName: {
+                            bsonType: 'string'
+                        },
+                        lastName: {
+                            bsonType: 'string'
+                        }
+                    }
+                }
+            }
+        }
+    }
+});
+
+db.groups.insertMany([{
+    name: 'Group1'
+}, {
+    name: 'Group2'
+}, {
+    name: 'Group3'
+}]);
+
+
+db.createCollection('students', {
+    validator: {
+        $jsonSchema: {
+            bsonType: 'object',
+            required: ['firstName', 'lastName', 'email', 'groupId'],
+            properties: {
+                firstName: {
+                    bsonType: 'string'
+                },
+                lastName: {
+                    bsonType: 'string'
+                },
+                email: {
+                    bsonType: 'string'
+                },
+                groupId: {
+                    bsonType: 'objectId'
+                }
+            }
+        }
+    }
+});
+
+
+
+/*
+
+
+
+{
+  "acknowledged": true,
+  "insertedIds": {
+    "0": {
+      "$oid": "64994517d6deff977f95cdc1"
+    },
+    "1": {
+      "$oid": "64994517d6deff977f95cdc2"
+    },
+    "2": {
+      "$oid": "64994517d6deff977f95cdc3"
+    }
+  }
+}
+
+*/
+
+
+db.students.insertMany([{
+    firstName: 'Test',
+    lastName: 'Tester',
+    email: 'res@few.wer',
+    groupId: new ObjectId("64994517d6deff977f95cdc1")
+},{
+    firstName: 'Test1',
+    lastName: 'Tester1',
+    email: 'res@few.wer',
+    groupId: new ObjectId("64994517d6deff977f95cdc2")
+},
+{
+    firstName: 'Test2',
+    lastName: 'Tester2',
+    email: 'res@few.wer',
+    groupId: new ObjectId("64994517d6deff977f95cdc1")
+},
+{
+    firstName: 'Test3',
+    lastName: 'Tester3',
+    email: 'res@few.wer',
+    groupId: new ObjectId("64994517d6deff977f95cdc1")
+},
+{
+    firstName: 'Test4',
+    lastName: 'Tester4',
+    email: 'res@few.wer',
+    groupId: new ObjectId("64994517d6deff977f95cdc2")
+},
+{
+    firstName: 'Test5',
+    lastName: 'Tester5',
+    email: 'res@few.wer',
+    groupId: new ObjectId("64994517d6deff977f95cdc1")
+},
+{
+    firstName: 'Test6',
+    lastName: 'Tester6',
+    email: 'res@few.wer',
+    groupId: new ObjectId("64994517d6deff977f95cdc2")
+},
+{
+    firstName: 'Test7',
+    lastName: 'Tester7',
+    email: 'res@few.wer',
+    groupId: new ObjectId("64994517d6deff977f95cdc1")
+},
+{
+    firstName: 'Test8',
+    lastName: 'Tester8',
+    email: 'res@few.wer',
+    groupId: new ObjectId("64994517d6deff977f95cdc1")
+},
+{
+    firstName: 'Test9',
+    lastName: 'Tester9',
+    email: 'res@few.wer',
+    groupId: new ObjectId("64994517d6deff977f95cdc3")
+}]);
+
+db.students.find();
+
+
+db.students.aggregate([{
+    $lookup: {
+      from: 'groups',
+      localField: 'groupId',
+      foreignField: '_id',
+      as: 'group'
+    }
+},{
+    $unwind: {
+        path: "$group"
+    }
+}, {
+    $unset: "groupId"
+}, {
+    $group: {
+        _id: "$group.name",
+        count: {
+            $count: {}
+        }
+    }
+}]);
