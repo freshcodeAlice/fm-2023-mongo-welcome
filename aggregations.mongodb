@@ -171,3 +171,99 @@ ON (умова співставлення таблиць)
 таблиця1.поле = таблиця2.інше_поле
 
 */
+
+/// Прибираємо зайве і розпаковуємо []
+
+db.products.aggregate([{
+    $lookup: {
+        from: 'manufacturer',
+        localField: 'manufacturerId',
+        foreignField: '_id',
+        as: 'manuf'
+    }
+}, {
+    $unwind: {
+        path: "$manuf"
+    }
+}, {
+    $unset: "manufacturerId"
+}]);
+
+
+/* Aggregations 
+
+Задача: порахувати кількість позицій товарів по кожному виробнику
+*/
+
+db.products.aggregate([{
+    $lookup: {
+        from: 'manufacturer',
+        localField: 'manufacturerId',
+        foreignField: '_id',
+        as: 'manuf'
+    }
+}, {
+    $unwind: {
+        path: "$manuf"
+    }
+}, {
+    $unset: "manufacturerId"
+}, {
+    $group: {
+        _id: "$manuf.name",
+        countPositions: {
+            $count: {}
+        }
+    }
+}]);
+
+
+/// Залишки товарів по кожному виробнику
+
+db.products.aggregate([{
+    $lookup: {
+        from: 'manufacturer',
+        localField: 'manufacturerId',
+        foreignField: '_id',
+        as: 'manuf'
+    }
+}, {
+    $unwind: {
+        path: "$manuf"
+    }
+}, {
+    $unset: "manufacturerId"
+}, {
+    $group: {
+        _id: "$manuf.name",
+        countAmounts: {
+            $sum: "$amount"
+        }
+    }
+}]);
+
+//// Сортування та ліміт
+
+
+db.products.aggregate([{
+    $lookup: {
+        from: 'manufacturer',
+        localField: 'manufacturerId',
+        foreignField: '_id',
+        as: 'manuf'
+    }
+}, {
+    $unwind: {
+        path: "$manuf"
+    }
+}, {
+    $unset: "manufacturerId"
+}, {
+    $sort: {
+        price: -1
+    }
+}]);
+
+
+
+db.products.find().limit(5);
