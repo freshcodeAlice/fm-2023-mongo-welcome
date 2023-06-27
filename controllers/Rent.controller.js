@@ -11,19 +11,21 @@ module.exports.getMovie = async (req, res, next) => {
 }
 
 module.exports.reviewRent = async (req, res, next) => {
-    // try {
-    //     const {params: {rentId}} = req;
-    //     const rent = await Rent.findById
-    // } catch(error) {
-    //     next(error)
-    // }
+    try {
+        const {params: {rentId}} = req;
+        const rent = await Rent.findById(rentId);
+        res.status(200).send({data: rent})
+    } catch(error) {
+        next(error)
+    }
 }
 
 module.exports.allUsersRents = async (req, res, next) => {
     try {
         const {params: {userId}} = req;
         const userRents = await Rent.find({
-            user: userId
+            user: userId,
+            status: 'taken'
         });
         res.status(200).send({data: userRents})
     } catch(error) {

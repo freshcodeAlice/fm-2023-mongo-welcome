@@ -31,6 +31,24 @@ module.exports.getAll = async(req, res, next) => {
 }
 
 /*
-getAll  users
+Реалізувати додавання фільму до списку улюблених
 
 */
+
+
+module.exports.addMovieToFavourite = async (req, res, next) => {
+    try {
+        const {params: {userId, movieId}} = req;
+        const updated = await User.updateOne({
+            _id: userId
+        }, {
+            $addToSet: {
+                favouriteFilms: movieId
+            }
+        });
+
+       res.status(200).send({data: updated})
+    } catch(error) {
+        next(error)
+    }
+}
