@@ -1,6 +1,6 @@
 const express = require('express');
 const MovieController = require('../controllers/Movie.controller');
-
+const rentRouter = require('./rentRouter');
 const movieRouter = express.Router();
 
 movieRouter.post('/', MovieController.createOne); //createOne
@@ -11,6 +11,8 @@ movieRouter.delete('/:id', MovieController.deleteOne);
 movieRouter.get('/search/', MovieController.getSearchOne); /// ?name=Taxi Driver
 movieRouter.get('/search/all/', MovieController.getSearchAll); /// ?name=Taxi Driver
 movieRouter.get('/fans/:id', MovieController.getUsersLikedThisFilm);
+
+movieRouter.use('/rent', rentRouter);
 
 module.exports = movieRouter;
 

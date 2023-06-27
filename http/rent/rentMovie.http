@@ -1,0 +1,7 @@
+POST http://localhost:3000/api/movies/rent/ HTTP/1.1
+Content-Type: application/json 
+
+{
+    "userId": "64994c7c7415c986827190c5",
+    "movieId": "64955c9fc8ce3a6a494e02dc"
+}
